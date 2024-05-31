@@ -1,6 +1,7 @@
 const eventsDB = require('../data/events.json')
 const path = require("path");
 const fs = require('fs');
+const { json } = require('express');
 
 class Event {
     constructor(id, title, description, date, maxSeats) {
@@ -16,6 +17,10 @@ class Event {
         if (existingEvent) {
             throw new Error(`L'id ${newEvent.id} esiste già`);
         }
+
+        let maxId = eventsDB.reduce((max, event) => (event.id > max ? event.id : max), 0);
+        newEvent.id = maxId + 1;
+
         eventsDB.push(newEvent);
 
         const filePath = path.join(__dirname, '../data/events.json');
@@ -51,6 +56,35 @@ class Event {
         }
         return filteredEvents;
     }
+
+    static modifyEvent(id, newEvent) {
+        let updatedEvent = null;
+
+        // Cerca l'evento con l'id specificato e aggiorna i suoi campi con i nuovi valori
+        const updatedEvents = eventsDB.map(event => {
+            if (event.id === id) {
+                updatedEvent = {
+                    ...event,
+                    title: newEvent.title !== undefined ? newEvent.title : event.title,
+                    description: newEvent.description !== undefined ? newEvent.description : event.description,
+                    date: newEvent.date !== undefined ? newEvent.date : event.date,
+                    maxSeats: newEvent.maxSeats !== undefined ? newEvent.maxSeats : event.maxSeats,
+                };
+                return updatedEvent;
+            }
+            return event;
+        });
+
+        // Se l'evento è stato aggiornato, sovrascrivi il file JSON con i dati aggiornati
+        if (updatedEvent) {
+            const filePath = path.join(__dirname, '../data/events.json');
+            const dataToJson = JSON.stringify(updatedEvents);
+            fs.writeFileSync(filePath, dataToJson);
+        }
+
+        return updatedEvent;
+    }
+
 }
 
 module.exports = Event;

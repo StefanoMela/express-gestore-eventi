@@ -4,10 +4,9 @@ const eventsController = require('../controllers/eventsC');
 
 router.get('/', eventsController.index);
 
-router.get('/:id', eventsController.single);
+router.put('/:id', eventsController.update);
 
 router.post('/store', eventsController.store);
 
-router.put('/:event', eventsController.update);
 
 module.exports = router;

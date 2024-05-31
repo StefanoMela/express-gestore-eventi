@@ -7,14 +7,17 @@ const index = (req, res) => {
 };
 
 const store = (req, res) => {
-    const { title, description, date, maxSeats } = req.body;
-    const newEvent = new eventModel(1, title, description, date, maxSeats)
+    const {id, title, description, date, maxSeats } = req.body;
+    const newEvent = new eventModel(id, title, description, date, maxSeats)
     eventModel.saveEvent(newEvent)
     res.json(newEvent);
 };
 
 const update = (req, res) => {
-
+    const {title, description, date, maxSeats } = req.body;
+    console.log("id" + req.params.id, "body:" + JSON.stringify({title, description, date, maxSeats }));
+    const modifiedEvent = eventModel.modifyEvent(req.params.id,  {title, description, date, maxSeats})
+    res.json(modifiedEvent);
 };
 
 const single = (req, res) => {
