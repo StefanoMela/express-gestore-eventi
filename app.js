@@ -13,7 +13,7 @@ app.get('/', (req, res) => {
     res.send('Benvenuto');
 });
 
-// app.use('/events', eventsRouter);
+app.use('/events', eventsRouter);
 
 app.listen(3000, () => {
     console.log('Server avviato su http://localhost:3000');

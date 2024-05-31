@@ -26,6 +26,15 @@ class Event {
         const dataToRead = fs.readFileSync(filePath, "utf-8");
         return JSON.parse(dataToRead)
     }
+
+    static getEventByID(id){
+        const singleEvent = eventsDB.find(event => event.id === id);
+        return singleEvent;
+    }
+
+    static getAllEvents(){
+        return eventsDB;
+    }
 }
 
 const evento1 = new Event(1, 'Il mio primo evento', 'Una bellissima festa', 'stasera', 234);
@@ -34,6 +43,7 @@ const evento2 = new Event(2, 'Il mio secondo evento', 'Una tristissima festa', '
 Event.saveEvent(eventsDB, evento1);
 Event.saveEvent(eventsDB, evento2);
 
-
 const events = Event.readEvent('events');
-console.log(events);
+
+
+module.exports = Event;
