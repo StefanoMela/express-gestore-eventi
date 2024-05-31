@@ -10,21 +10,30 @@ class Event {
         this.date = date;
         this.maxSeats = maxSeats;
     }
+
     static saveEvent(fileName, newEvent) {
-        const filePath = path.join(__dirname, '..' + 'data' + fileName + ".json");
-        const dataToJson = JSON.stringify(newEvent)
+        fileName = 'events';
+        const existingEvent = eventsDB.find(event => event.id === newEvent.id);
+        !existingEvent ? eventsDB.push(newEvent) : new Error(`L/n\'id ${newEvent.id} esiste già`)
+        const filePath = path.join(__dirname, '../' + 'data/' + fileName + ".json");
+        const dataToJson = JSON.stringify(eventsDB);
         fs.writeFileSync(filePath, dataToJson);
     }
 
-    static readEvent(event) {
-        const filePath = path.join(__dirname, '..' + 'data' + fileName + ".json");
+    static readEvent(fileName) {
+        fileName = 'events'
+        const filePath = path.join(__dirname, '../' + 'data/' + fileName + ".json");
         const dataToRead = fs.readFileSync(filePath, "utf-8");
         return JSON.parse(dataToRead)
     }
 }
 
 const evento1 = new Event(1, 'Il mio primo evento', 'Una bellissima festa', 'stasera', 234);
+const evento2 = new Event(2, 'Il mio secondo evento', 'Una tristissima festa', 'domani', 234);
 
 Event.saveEvent(eventsDB, evento1);
+Event.saveEvent(eventsDB, evento2);
 
-Event.readEvent(evento1);
+
+const events = Event.readEvent('events');
+console.log(events);
