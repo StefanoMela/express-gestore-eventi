@@ -1,7 +1,8 @@
 const eventModel = require('../models/event');
 
 const index = (req, res) => {
-
+    const filteredEvents = eventModel.getEventsByQuery(req.query);
+    res.json(filteredEvents);
 };
 
 const store = (req, res) => {
@@ -21,15 +22,10 @@ const single = (req, res) => {
     res.json(requiredEvent);
 }
 
-const all = (req, res) => {
-    const events = eventModel.getAllEvents();
-    res.json(events);
-}
 
 module.exports = {
     index,
     store,
     update,
     single,
-    all,
 }

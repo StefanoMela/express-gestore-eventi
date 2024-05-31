@@ -2,10 +2,7 @@ const express = require('express');
 const router = express.Router();
 const eventsController = require('../controllers/eventsC');
 
-
 router.get('/', eventsController.index);
-
-router.get('/all', eventsController.all);
 
 router.get('/:id', eventsController.single);
 

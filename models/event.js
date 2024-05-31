@@ -9,6 +9,7 @@ class Event {
         this.description = description;
         this.date = date;
         this.maxSeats = maxSeats;
+
     }
 
     static saveEvent(fileName, newEvent) {
@@ -27,23 +28,34 @@ class Event {
         return JSON.parse(dataToRead)
     }
 
-    static getEventByID(id){
-        const singleEvent = eventsDB.find(event => event.id === id);
-        return singleEvent;
+    static getEventByID(id) {
+        return eventsDB.find(event => event.id === id);
     }
 
-    static getAllEvents(){
+    static getAllEvents() {
         return eventsDB;
+    }
+
+    static getEventsByQuery(query) {
+        const { title, date } = query;
+        const filteredEvents = eventsDB.filter(event => {
+            return (!title || event.title === title) && (!date || event.date === date);
+        });
+        if (filteredEvents.length === 0) {
+            throw new Error('Non ci sono eventi corrispondenti ai criteri di ricerca.');
+        }
+        return filteredEvents;
     }
 }
 
-const evento1 = new Event(1, 'Il mio primo evento', 'Una bellissima festa', 'stasera', 234);
-const evento2 = new Event(2, 'Il mio secondo evento', 'Una tristissima festa', 'domani', 234);
+const evento1 = new Event(1, 'Il mio primo evento', 'Una bellissima festa', 25/5/21, 234);
+const evento2 = new Event(2, 'Il mio secondo evento', 'Una tristissima festa', 20/2/21, 234);
 
 Event.saveEvent(eventsDB, evento1);
 Event.saveEvent(eventsDB, evento2);
 
 const events = Event.readEvent('events');
 
+// console.log(events);
 
 module.exports = Event;
