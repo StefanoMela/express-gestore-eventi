@@ -1,12 +1,16 @@
 const eventModel = require('../models/event');
 
+
 const index = (req, res) => {
     const filteredEvents = eventModel.getEventsByQuery(req.query);
     res.json(filteredEvents);
 };
 
 const store = (req, res) => {
-
+    const { title, description, date, maxSeats } = req.body;
+    const newEvent = new eventModel(1, title, description, date, maxSeats)
+    eventModel.saveEvent(newEvent)
+    res.json(newEvent);
 };
 
 const update = (req, res) => {

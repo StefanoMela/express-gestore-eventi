@@ -9,16 +9,21 @@ class Event {
         this.description = description;
         this.date = date;
         this.maxSeats = maxSeats;
-
     }
 
-    static saveEvent(fileName, newEvent) {
-        fileName = 'events';
+    static saveEvent(newEvent) {
         const existingEvent = eventsDB.find(event => event.id === newEvent.id);
-        !existingEvent ? eventsDB.push(newEvent) : new Error(`L/n\'id ${newEvent.id} esiste già`)
-        const filePath = path.join(__dirname, '../' + 'data/' + fileName + ".json");
+        if (existingEvent) {
+            throw new Error(`L'id ${newEvent.id} esiste già`);
+        }
+        eventsDB.push(newEvent);
+
+        const filePath = path.join(__dirname, '../data/events.json');
         const dataToJson = JSON.stringify(eventsDB);
+
         fs.writeFileSync(filePath, dataToJson);
+
+        return newEvent;
     }
 
     static readEvent(fileName) {
@@ -47,15 +52,5 @@ class Event {
         return filteredEvents;
     }
 }
-
-const evento1 = new Event(1, 'Il mio primo evento', 'Una bellissima festa', 25/5/21, 234);
-const evento2 = new Event(2, 'Il mio secondo evento', 'Una tristissima festa', 20/2/21, 234);
-
-Event.saveEvent(eventsDB, evento1);
-Event.saveEvent(eventsDB, evento2);
-
-const events = Event.readEvent('events');
-
-// console.log(events);
 
 module.exports = Event;
